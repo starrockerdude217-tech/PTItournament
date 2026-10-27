@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Турнір з Dota 2 · ФТІ КПІ</title>
+<meta name="description" content="Турнір з Dota 2 від ФТІ КПІ ім. Ігоря Сікорського: double elimination, жива сітка та статистика матчів.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;700&family=Unbounded:wght@600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#120F2E;--card:#1C1745;--head:#241E5A;--line:#3A3180;
+  --text:#ECE9FF;--muted:#9A93D1;--accent:#8B6CFF;
+  --wb:#4F8CFF;--lb:#C45CFF;--gf:#FFD166;--ready:#FF9F43;--win:#35D6A0;
+  --display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --body:"Onest",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{color-scheme:dark;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.6;overflow-x:hidden}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+section{padding:72px 0}
+h1,h2,h3{font-family:var(--display);line-height:1.1}
+h2{font-size:clamp(1.5rem,3.4vw,2.1rem);margin-bottom:12px}
+.lead{color:var(--muted);max-width:640px}
+.tag{color:var(--accent);font-weight:700;letter-spacing:.14em;font-size:.78rem;text-transform:uppercase}
+
+/* hero */
+.hero{position:relative;padding:64px 0 56px;
+  background:radial-gradient(700px 380px at 82% 10%,rgba(139,108,255,.28),transparent 70%),
+             radial-gradient(520px 320px at 5% 95%,rgba(79,140,255,.16),transparent 70%)}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center}
+.hero h1{font-size:clamp(2.3rem,6.4vw,4.2rem);font-weight:800;margin:14px 0 18px}
+.hero h1 span{background:linear-gradient(90deg,var(--wb),var(--lb) 60%,var(--gf));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:1.08rem;max-width:520px}
+.bracket{width:100%;height:auto;filter:drop-shadow(0 18px 40px rgba(0,0,0,.45))}
+.bracket .node{fill:var(--card);stroke:var(--line);stroke-width:2}
+.bracket .ln{fill:none;stroke-width:3;stroke-linecap:round;stroke-dasharray:420;stroke-dashoffset:420;animation:draw 2.2s .3s ease forwards}
+.bracket .l2{animation-delay:.9s}.bracket .l3{animation-delay:1.5s}
+.bracket .pulse{animation:pulse 2.4s ease-in-out infinite}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pulse{50%{opacity:.45}}
+
+/* facts */
+.facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.fact b{display:block;background:var(--head);padding:7px 16px;font-size:.72rem;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted)}
+.fact span{display:block;padding:16px;font-family:var(--display);font-size:1.25rem}
+
+/* how it works */
+.paths{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}
+.path{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:14px;padding:22px}
+.path h3{font-size:1.02rem;color:var(--c);margin-bottom:8px}
+.path p{color:var(--muted);font-size:.95rem}
+.wb{--c:var(--wb)}.lb{--c:var(--lb)}.gf{--c:var(--gf)}
+
+/* what to expect */
+.list{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:28px}
+.item{display:flex;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+.item i{font-style:normal;font-size:1.5rem;line-height:1}
+.item h3{font-size:.95rem;margin-bottom:4px;font-family:var(--body);font-weight:700}
+.item p{color:var(--muted);font-size:.92rem}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:22px;color:var(--muted);font-size:.85rem}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;
+  background:var(--k);margin-right:7px}
+
+/* join */
+.join{background:linear-gradient(135deg,var(--head),var(--card));border:1px solid var(--line);
+  border-radius:22px;padding:44px 32px;text-align:center}
+.join p{color:var(--muted);max-width:520px;margin:10px auto 0}
+footer{padding:30px 0 46px;text-align:center;color:var(--muted);font-size:.85rem}
+
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:860px){
+  .hero .wrap{grid-template-columns:1fr}
+  .facts{grid-template-columns:repeat(2,1fr)}
+  .paths,.list{grid-template-columns:1fr}
+  section{padding:52px 0}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  .bracket .ln{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div>
+      <div class="tag">ФТІ КПІ ім. Ігоря Сікорського</div>
+      <h1>Турнір з <span>Dota&nbsp;2</span></h1>
+      <p>Збирай команду, проходь верхню або нижню сітку й бийся за Grand Final.
+         Результати, сітка та статистика матчів оновлюються на сайті в реальному часі.</p>
+    </div>
+
+    <svg class="bracket" viewBox="0 0 420 330" role="img" aria-label="Схема турнірної сітки">
+      <path class="ln" d="M96 52H140V92H184M96 132H140V92" stroke="#4F8CFF"/>
+      <path class="ln" d="M96 212H140V252H184M96 292H140V252" stroke="#C45CFF"/>
+      <path class="ln l2" d="M236 92H280V172H324" stroke="#4F8CFF"/>
+      <path class="ln l2" d="M236 252H280V172" stroke="#C45CFF"/>
+      <path class="ln l3" d="M376 172H400" stroke="#FFD166"/>
+      <g class="node">
+        <rect x="20" y="36" width="76" height="32" rx="8"/><rect x="20" y="116" width="76" height="32" rx="8"/>
+        <rect x="20" y="196" width="76" height="32" rx="8"/><rect x="20" y="276" width="76" height="32" rx="8"/>
+        <rect x="184" y="76" width="52" height="32" rx="8"/><rect x="184" y="236" width="52" height="32" rx="8"/>
+        <rect x="324" y="156" width="52" height="32" rx="8"/>
+      </g>
+      <circle class="pulse" cx="406" cy="172" r="7" fill="#FFD166"/>
+      <rect x="32" y="48" width="36" height="8" rx="4" fill="#35D6A0"/>
+      <rect x="32" y="128" width="36" height="8" rx="4" fill="#FF9F43"/>
+    </svg>
+  </div>
+</header>
+
+<main>
+  <section class="reveal">
+    <div class="wrap">
+      <div class="facts">
+        <div class="fact"><b>Команд</b><span>4–16</span></div>
+        <div class="fact"><b>Формат</b><span>Double Elim</span></div>
+        <div class="fact"><b>Матчі</b><span>BO1 · BO3 · BO5</span></div>
+        <div class="fact"><b>Сітка</b><span>Онлайн</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="wrap">
+      <div class="tag">Як це працює</div>
+      <h2>Одна поразка не вирішує все</h2>
+      <p class="lead">Double elimination дає кожній команді друге життя: програти доведеться двічі, щоб вибути.</p>
+      <div class="paths">
+        <div class="path wb"><h3>Верхня сітка</h3><p>Стартують усі. Перемагаєш і йдеш далі у верхню частину, одразу до фіналу верхньої сітки.</p></div>
+        <div class="path lb"><h3>Нижня сітка</h3><p>Програв у верхній? Не кінець. Тут ти ще можеш пробитися до фіналу, але наступна поразка остання.</p></div>
+        <div class="path gf"><h3>Grand Final</h3><p>Переможці верхньої та нижньої сіток зустрічаються в одному вирішальному матчі за титул чемпіона.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="wrap">
+      <div class="tag">Що на тебе чекає</div>
+      <h2>Дивись і грай з усіма даними</h2>
+      <div class="list">
+        <div class="item"><i>🏆</i><div><h3>Жива турнірна сітка</h3><p>Хто з ким грає, хто вже пройшов далі і хто вибув, без жодних таблиць у чаті.</p></div></div>
+        <div class="item"><i>📊</i><div><h3>Статистика кожного матчу</h3><p>K/D/A, GPM, шкода по героях і вежах: натисни на завершений матч у сітці.</p></div></div>
+        <div class="item"><i>🤖</i><div><h3>Короткий AI-розбір</h3><p>Хто виграв, де зламалась гра і хто був MVP, одним поглядом.</p></div></div>
+        <div class="item"><i>📺</i><div><h3>Трансляція</h3><p>Найцікавіші матчі можна дивитися в прямому ефірі.</p></div></div>
+      </div>
+      <div class="legend">
+        <span style="--k:var(--ready)">матч готовий до гри</span>
+        <span style="--k:var(--win)">переможець</span>
+        <span style="--k:var(--wb)">верхня сітка</span>
+        <span style="--k:var(--lb)">нижня сітка</span>
+        <span style="--k:var(--gf)">Grand Final</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="wrap">
+      <div class="join">
+        <div class="tag">Реєстрація</div>
+        <h2>Збирай команду і вступай у гру</h2>
+        <p>Деталі про участь та реєстрацію команд оголосимо додатково. Слідкуйте за оновленнями.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer><div class="wrap">ФТІ КПІ ім. Ігоря Сікорського · Турнір з Dota 2</div></footer>
+
+<script>
+(function(){
+  var els=document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}});
+  },{threshold:.12});
+  els.forEach(function(e){io.observe(e)});
+})();
+</script>
+</body>
+</html>
